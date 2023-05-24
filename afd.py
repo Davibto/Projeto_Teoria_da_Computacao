@@ -25,36 +25,53 @@ class AFD:
                 finais = linha.split(':')[1].split(',')
                 self.finais = [e.strip() for e in finais]
             elif 'transicoes' in linha:
-                continue
+                pass
             else:
                 self.transicoes.append(linha.strip())
 
-    def valido(self): #Verifica se o AFD e valido
-        if (self.estado_inicial == '') or (self.finais == ''): #Se nao tem estado inicial ou final, nao e AFD
-            return False
-        
         #Criando a matriz/tabela da funcao de transições
-        coluna = len(self.estados)
-        linha = len(self.alfabeto)
+        linha = len(self.estados)
+        coluna = len(self.alfabeto)
         #Atribuindo None nas transicoes, caso no final do processo a transicao nao exista, o espaco estara none
-        self.transicoes_tabela = [[None for _ in range(linha +1)] for _ in range(coluna +1)]
-        for i in range(coluna):
-            self.transicoes_tabela[i+1][0] = self.estados[i]
+        self.transicoes_tabela = [[None for _ in range(coluna +1)] for _ in range(linha +1)]
         for i in range(linha):
+            self.transicoes_tabela[i+1][0] = self.estados[i]
+        for i in range(coluna):
             self.transicoes_tabela[0][i+1] = self.alfabeto[i]
 
-        for transicao in self.transicoes:
-            qi = transicao.split(',')[0]
-            qf = transicao.split(',')[1]
-            s = transicao.split(',')[2]
+    def valido(self): #Verifica se o AFD e valido
+        if self.estado_inicial == '': #Se nao tem estado inicial, nao e AFD
+            return False
+        else:
+            linha = len(self.estados)
+            coluna = len(self.alfabeto)
 
-            if (qi not in self.estados) or (qf not in self.estados): #Transicao de um estado que nao pertence ao AFD
-                return False
-            elif s not in self.alfabeto: #Simbolo da transicao nao pertence ao alfabeto compreendido pelo AFD
-                return False
+            for transicao in self.transicoes:
+                qi = transicao.split(',')[0]
+                qf = transicao.split(',')[1]
+                s = transicao.split(',')[2]
+
+                if (qi not in self.estados) or (qf not in self.estados) or (s not in self.alfabeto):
+                    return False #Estado nao pertence ao AFD ou simbolo da transicao nao pertence ao alfabeto compreendido pelo AFD
+                
+                for i in range(linha):#Todo estado tem uma transicao para cada simbolo
+                    if self.transicoes_tabela[i+1][0] == qi:
+                        for j in range(coluna):
+                            if self.transicoes_tabela[0][j+1] == s:
+                                self.transicoes_tabela[i+1][j+1] = qf
+                                break
+                        break
+
+ 
+        return self.verificar_elementos_matriz(self.transicoes_tabela)
             
-            #Todo estado tem uma transicao para cada simbolo
-            if self.transicoes_tabela[1][0] == qi:
-                pass
-            print(qi + ' -' + s +'-> ' + qf)
-            
+    def verificar_elementos_matriz(self, matriz): #Retorna False caso haja mais de um elemento None na tabela de transicoes
+        contador = 0
+        for linha in matriz:
+            for elemento in linha:
+                if elemento is None:
+                    contador += 1
+        if contador == 1:
+            return True
+        else:
+            return False

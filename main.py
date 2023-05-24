@@ -1,7 +1,7 @@
 from afd import AFD
 
 # Definino o arquivo que sera lido
-arquivo = "C:/Users/arthu/Vscode/Python/MinimizadorAFD/Projeto_Teoria_da_Computacao/AFDerrado.txt"
+arquivo = "C:/Users/arthu/Vscode/Python/MinimizadorAFD/Projeto_Teoria_da_Computacao/AFDcerto.txt"
 
 # Criando AFD
 afd = AFD(arquivo) 
