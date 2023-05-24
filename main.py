@@ -1,7 +1,7 @@
 from afd import AFD
 
 # Definino o arquivo que sera lido
-arquivo = "C:/Users/arthu/Vscode/Python/MinimizadorAFD/Projeto_Teoria_da_Computacao/AFDcerto.txt"
+arquivo = "C:/Users/arthu/Vscode/Python/MinimizadorAFD/Projeto_Teoria_da_Computacao/AFDerrado.txt"
 
 # Criando AFD
 afd = AFD(arquivo) 
@@ -18,7 +18,7 @@ print(afd.finais)
 print("Transicoes:")
 print(afd.transicoes)
 print("Tabela de transicoes:")
-afd.valida_afd()
+print(afd.valido())
 print(afd.transicoes_tabela);
 
 # Preenchendo a tabela de transicoes Verificando as transicoe
