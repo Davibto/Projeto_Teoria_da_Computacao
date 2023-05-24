@@ -17,11 +17,8 @@ print("Estados finais:")
 print(afd.finais)
 print("Transicoes:")
 print(afd.transicoes)
-
-# Criando a matriz/tabela da funcao de transições
-row = len(afd.alfabeto)
-column = len(afd.estados)
-transicoes_tabela = [[None for _ in range(row)] for _ in range(column)]
-print(transicoes_tabela)
+print("Tabela de transicoes:")
+afd.valida_afd()
+print(afd.transicoes_tabela);
 
 # Preenchendo a tabela de transicoes Verificando as transicoe
