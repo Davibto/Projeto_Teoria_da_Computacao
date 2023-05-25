@@ -57,7 +57,9 @@ class AFD:
                 for i in range(linha):#Todo estado tem uma transicao para cada simbolo
                     if self.transicoes_tabela[i+1][0] == qi:
                         for j in range(coluna):
-                            if self.transicoes_tabela[0][j+1] == s:
+                            if self.transicoes_tabela[i+1][j+1] != None: #Tem mais de uma transicao com o mesmo simbolo saindo do estado
+                                return False
+                            elif self.transicoes_tabela[0][j+1] == s:
                                 self.transicoes_tabela[i+1][j+1] = qf
                                 break
                         break
