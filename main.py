@@ -43,7 +43,7 @@ for i in range(len(afd.finais)): #cria os pares de estados finais
             pares_nao_marcados.append([afd.finais[i], afd.finais[j]])
 
 for i in range(len(estados_nao_finais)): #cria os pares de estados marcados
-    for j in range(i, len(afd.finais)):
+    for j in range(len(afd.finais)):
         if estados_nao_finais[i] != afd.finais[j]:
             pares_marcados.append([estados_nao_finais[i], afd.finais[j]])
             
