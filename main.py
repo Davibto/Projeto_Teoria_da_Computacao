@@ -1,6 +1,6 @@
 from afd import AFD
 
-### Criando o AFD a partir de um .txt
+## Criando o AFD a partir de um .txt
 ## 1.Definino o arquivo que sera lido
 # Arquivo = "AFDteste.txt"
 arquivo = "C:/Users/arthu/Vscode/Python/MinimizadorAFD/Projeto_Teoria_da_Computacao/AFDcerto.txt"
@@ -48,15 +48,15 @@ else:
             if afd.finais[i] != afd.finais[j]:
                 pares_nao_marcados.append([afd.finais[i], afd.finais[j]])
 
-    for i in range(len(estados_nao_finais)): # Cria os pares de estados marcados
-        for j in range(len(afd.finais)):
-            if estados_nao_finais[i] != afd.finais[j]:
-                pares_marcados.append([estados_nao_finais[i], afd.finais[j]])
-                
-    print("Pares nao marcados (possiveis equivalentes):")
-    print(pares_nao_marcados)
-    print("Pares marcados (nao equivalentes):")
-    print(pares_marcados)
+for i in range(len(estados_nao_finais)): #cria os pares de estados marcados
+    for j in range(len(afd.finais)):
+        if estados_nao_finais[i] != afd.finais[j]:
+            pares_marcados.append([estados_nao_finais[i], afd.finais[j]])
+            
+print("Pares nao marcados (possiveis equivalentes):")
+print(pares_nao_marcados)
+print("Pares marcados (nao equivalentes):")
+print(pares_marcados)
 
     ### STEP 3 if !alterou: end
     # while (!alterou) inicialmente False
