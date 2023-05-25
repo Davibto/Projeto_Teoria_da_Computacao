@@ -1,0 +1,2 @@
+
+print(afd.valido())
