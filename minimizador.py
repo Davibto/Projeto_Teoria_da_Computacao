@@ -5,7 +5,7 @@ class MinimizadorAFD:
     @staticmethod
     def minimizar(afd):
         ### Implementando o metodo de Myhill Nerode
-        ## 1. Criando os pares de todos os estados pertencentes ao AFD
+        ## 1. Recuperando os pares de todos os estados pertencentes ao AFD
         conjunto_estados = afd.estados
         print('conjuto estados: ', conjunto_estados)
         conjunto_estados_finais = afd.finais
@@ -15,17 +15,17 @@ class MinimizadorAFD:
         pares_marcados = []
         pares_nao_marcados = []
 
-        for i in range(len(estados_nao_finais)): # Cria os pares de estados nao finais
+        for i in range(len(estados_nao_finais)): ## 2.Cria os pares de estados nao finais
             for j in range(i+1, len(estados_nao_finais)):
                 if estados_nao_finais[i] != estados_nao_finais[j]:
                     pares_nao_marcados.append([estados_nao_finais[i], estados_nao_finais[j]])
                 
-        for i in range(len(afd.finais)): # Cria os pares de estados finais
+        for i in range(len(afd.finais)): ## 3.Cria os pares de estados finais
             for j in range(i+1, len(afd.finais)):
                 if afd.finais[i] != afd.finais[j]:
                     pares_nao_marcados.append([afd.finais[i], afd.finais[j]])
 
-        for i in range(len(estados_nao_finais)): #cria os pares de estados marcados
+        for i in range(len(estados_nao_finais)): # 4.Cria os pares de estados marcados
             for j in range(len(afd.finais)):
                 if estados_nao_finais[i] != afd.finais[j]:
                     pares_marcados.append([estados_nao_finais[i], afd.finais[j]])
@@ -35,11 +35,11 @@ class MinimizadorAFD:
         print("Pares marcados (nao equivalentes):")
         print(pares_marcados)
 
-        ### 2.Verificar as transicoe dos pares de estados nao marcados, ate que nao seja possivel marcar mais nenhum par
+        ## 5.Verificar as transicoe dos pares de estados nao marcados, ate que nao seja possivel marcar mais nenhum par
         alterou = True
-        while(alterou): # Enquanto houver alteracoes em pares_nao_marcados e pares_marcados, verifica os estados de pares_nao_marcados
+        while alterou: # Enquanto houver alteracoes em pares_nao_marcados e pares_marcados, verifica os estados de pares_nao_marcados
             count = 0
-            while(count < len(pares_nao_marcados)): # Percorrer o array a cada alteracao
+            while (count < len(pares_nao_marcados)): # Percorrer o array a cada alteracao
                 par = pares_nao_marcados[count]
                 qi = par[0]
                 qf = par[1]
@@ -72,7 +72,7 @@ class MinimizadorAFD:
                 par_resultante_inverso.append(estado_resultado_qf)
                 par_resultante_inverso.append(estado_resultado_qi)
 
-                if par_resultante in pares_marcados:
+                if par_resultante in pares_marcados: ## 6.Caso o resultado do par esteja marcado, mudadmos o par para pares_marcados
                     print('Par resultante: ' + par_resultante[0] + par_resultante[1] + ' esta marcado')
                     print(par)
                     pares_nao_marcados.remove(par)
