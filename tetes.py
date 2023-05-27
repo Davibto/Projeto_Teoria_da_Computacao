@@ -2,7 +2,7 @@ from afd import AFD
 from minimizador import MinimizadorAFD
 
 # Arquivo = "cd.. /AFDs/AFDteste.txt"
-arquivo = "C:/Users/arthu/Vscode/Python/MinimizadorAFD/Projeto_Teoria_da_Computacao/AFDs/AFDteste.txt"
+arquivo = "C:/Users/arthu/Vscode/Python/MinimizadorAFD/Projeto_Teoria_da_Computacao/AFDs/AFDindiano.txt"
 
 afd = AFD(arquivo)
 afd_valido = afd.valido()
@@ -24,11 +24,5 @@ else:
     # print("Tabela de transicoes:")
     # print(afd.valido())
     # print(afd.transicoes_tabela);
-
-    conjunto_estados = set(afd.estados)
-    conjunto_estados_finais = set(afd.finais)
-    estados_nao_finais = list(conjunto_estados - conjunto_estados_finais)
-    pares_marcados = []
-    pares_nao_marcados = []
 
     MinimizadorAFD().minimizar(afd)

@@ -9,7 +9,9 @@ class MinimizadorAFD:
         conjunto_estados = afd.estados
         print('conjuto estados: ', conjunto_estados)
         conjunto_estados_finais = afd.finais
+        print('conjunto_estados_finais: ', conjunto_estados_finais)
         estados_nao_finais = [estado for estado in conjunto_estados if estado not in conjunto_estados_finais] # Estados nao finais eh a diferenca entre os estados e os estados finais
+        print('estados_nao_finais: ', estados_nao_finais)
         pares_marcados = []
         pares_nao_marcados = []
 
@@ -38,7 +40,6 @@ class MinimizadorAFD:
         while(alterou): # Enquanto houver alteracoes em pares_nao_marcados e pares_marcados, verifica os estados de pares_nao_marcados
             count = 0
             while(count < len(pares_nao_marcados)): # Percorrer o array a cada alteracao
-                print('count: ', count, 'len: ', len(pares_nao_marcados))
                 par = pares_nao_marcados[count]
                 qi = par[0]
                 qf = par[1]
@@ -63,14 +64,22 @@ class MinimizadorAFD:
                                     estado_resultado_qf = afd.transicoes_tabela[i+1][j+1] # Achou o segundo estado resultante da transicao s
                                     break
                             break
-                    break
                 
                 par_resultante = [] # Array para armazenar o resultado da transicao na tabela de transicao
+                par_resultante_inverso = [] 
                 par_resultante.append(estado_resultado_qi)
                 par_resultante.append(estado_resultado_qf)
+                par_resultante_inverso.append(estado_resultado_qf)
+                par_resultante_inverso.append(estado_resultado_qi)
 
-                if (par_resultante in pares_marcados):
+                if par_resultante in pares_marcados:
                     print('Par resultante: ' + par_resultante[0] + par_resultante[1] + ' esta marcado')
+                    print(par)
+                    pares_nao_marcados.remove(par)
+                    pares_marcados.append(par)
+                    count = 0
+                elif par_resultante_inverso in pares_marcados:
+                    print('Par resultante: ' + par_resultante_inverso[0] + par_resultante_inverso[1] + ' esta marcado')
                     print(par)
                     pares_nao_marcados.remove(par)
                     pares_marcados.append(par)
