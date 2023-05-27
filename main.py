@@ -5,7 +5,7 @@ import pygame
 ### Criando o AFD a partir de um .txt
 ## 1.Definino o arquivo que sera lido
 # Arquivo = "cd.. /AFDs/AFDteste.txt"
-arquivo = "C:/Users/arthu/Vscode/Python/MinimizadorAFD/Projeto_Teoria_da_Computacao/AFDs/AFDcerto.txt"
+arquivo = "C:/Users/arthu/Vscode/Python/MinimizadorAFD/Projeto_Teoria_da_Computacao/AFDs/AFDteste.txt"
 
 ## 2.Criando o AFD
 afd = AFD(arquivo)

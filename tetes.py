@@ -1,6 +1,4 @@
 from afd import AFD
-import pyautogui
-import time
 from minimizador import MinimizadorAFD
 
 # Arquivo = "cd.. /AFDs/AFDteste.txt"
@@ -28,18 +26,3 @@ else:
     # print(afd.transicoes_tabela);
 
     MinimizadorAFD().minimizar(afd)
-
-def abrir_arquivo_jflap(caminho_arquivo):
-    pyautogui.press('win')
-    pyautogui.write('jflap7.1')
-    time.sleep(5)
-    pyautogui.press('enter')
-    time.sleep(10)
-
-    # Abre o arquivo no JFLAP
-    pyautogui.hotkey('ctrl', 'o')
-    pyautogui.write(caminho_arquivo)
-    pyautogui.press('enter')
-
-caminho_arquivo_afd = 'C:/Users/arthu/Vscode/Python/MinimizadorAFD/Projeto_Teoria_da_Computacao/teste.jff'
-abrir_arquivo_jflap(caminho_arquivo_afd)

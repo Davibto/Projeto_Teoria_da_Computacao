@@ -7,11 +7,8 @@ class MinimizadorAFD:
         ### Implementando o metodo de Myhill Nerode
         ## 1. Recuperando os pares de todos os estados pertencentes ao AFD
         conjunto_estados = afd.estados
-        print('conjuto estados: ', conjunto_estados)
         conjunto_estados_finais = afd.finais
-        print('conjunto_estados_finais: ', conjunto_estados_finais)
         estados_nao_finais = [estado for estado in conjunto_estados if estado not in conjunto_estados_finais] # Estados nao finais eh a diferenca entre os estados e os estados finais
-        print('estados_nao_finais: ', estados_nao_finais)
         pares_marcados = []
         pares_nao_marcados = []
 
@@ -97,4 +94,58 @@ class MinimizadorAFD:
         print("Pares marcados (nao equivalentes):")
         print(pares_marcados)
 
-        ### STEP 4 Combine all the unmarked pairs and make them a single state in the minimized DFA.
+        MinimizadorAFD.juntar_estados(pares_nao_marcados, afd)
+    
+    @staticmethod
+    def juntar_estados(pares_nao_marcados, afd):
+        ### Combinar estados nao marcados apos a execucao do metodo minimizar
+        estados = []
+        for par in pares_nao_marcados: #Criando os estados novos
+            for i in range(len(par)):
+                for j in range(len(pares_nao_marcados)):
+                    if par[i] in pares_nao_marcados[j]:
+                        if par[i] != pares_nao_marcados[j][0]:
+                            estados.append(par[i] + pares_nao_marcados[j][0])
+                        else:
+                            estados.append(par[i] + pares_nao_marcados[j][1])
+                        print(estados)
+                        print(par[i], pares_nao_marcados[j])
+                        pares_nao_marcados.remove(pares_nao_marcados[j])
+                        break
+            #adiciona as transicoes
+        
+        linha = len(afd.estados)
+        coluna = len(afd.alfabeto)
+        estado_resultado_qi = None
+        estado_resultado_qf = None
+        count = 0
+
+        for s in afd.alfabeto: # Verificando os estados resultantes das transicoes
+            for i in range(linha): # Linha referente ao qi na tabela de transicoes
+                if afd.transicoes_tabela[i+1][0] == estados[i][0]:
+                    afd.transicoes_tabela[i+1][0] = estados[i][0]
+                    break
+
+        while (count < len(afd.estados)):
+            for estado in estados:
+                if afd.estados[count] == estado[0]:
+                    print('entrou 1')
+                    afd.estados.append(estado)
+                    afd.estados.remove(estado[0])
+                    count = 0
+                
+                elif afd.estados[count] == estado[1]:
+                    print('entrou 2')
+                    afd.estados.append(estado)
+                    afd.estados.remove(estado[1])
+                    count = 0
+                else: 
+                    count+=1
+
+        print(afd.estados)
+            #apaga os estados [a, b] ...
+            #adiciona os estados criados
+            #minimizar(afd)
+            #['cd', 'ce'],  ['d', 'e']
+            #['cdc', 'de']
+            #cdcde
