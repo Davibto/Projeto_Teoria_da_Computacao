@@ -103,21 +103,22 @@ class MinimizadorAFD:
         while i < len(pares_nao_marcados):
             par = pares_nao_marcados[i]
             estado_novo = par[0] + par[1]
-            for estado in estados_novos:
-                if (estado_novo[0] in estado) or (estado_novo[1] in estado):
-                    pares_nao_marcados.remove(par)
-            j = i+1
-            while j < len(pares_nao_marcados):
-                if par[0] == pares_nao_marcados[j][0] or par[1] == pares_nao_marcados[j][0]:
-                    if not pares_nao_marcados[j][1] in estado_novo:
-                        estado_novo += pares_nao_marcados[j][1]
-                        pares_nao_marcados.remove(pares_nao_marcados[j])
-                elif par[0] == pares_nao_marcados[j][1] or par[1] == pares_nao_marcados[j][1]:
-                    if not pares_nao_marcados[j][0] in estado_novo:
-                        estado_novo += pares_nao_marcados[j][0]
-                j+=1
-            pares_nao_marcados.remove(par)
-            estados_novos.append(estado_novo)
+            j = i
+            if j < len(pares_nao_marcados[j]):
+                while j < len(pares_nao_marcados):
+                    if par[0] == pares_nao_marcados[j][0] or par[1] == pares_nao_marcados[j][0]:
+                        if not pares_nao_marcados[j][1] in estado_novo:
+                            estado_novo += pares_nao_marcados[j][1]
+                            # pares_nao_marcados.remove(pares_nao_marcados[j])
+                    elif par[0] == pares_nao_marcados[j][1] or par[1] == pares_nao_marcados[j][1]:
+                        if not pares_nao_marcados[j][0] in estado_novo:
+                            estado_novo += pares_nao_marcados[j][0]
+                    j+=1
+                # pares_nao_marcados.remove(par)
+                i += 1
+                estados_novos.append(estado_novo)
+            else:
+                break
             
         ## Reorganizar a lista de estados do afd
         print("Estados novos antes: ")
@@ -125,16 +126,18 @@ class MinimizadorAFD:
         i = 0
         estados = afd.estados
         while i < len(estados):
-            print(i)
+            remove = False
             e = estados[i]
             for estado in estados_novos:
                 if e in estado:
-                    print(e)
-                    i = 0
-                    estados.remove(e)
-            i += 1
+                    remove = True
+            if remove:
+                i = 0
+                estados.remove(e)
+            else:
+                i += 1
                     
-        
+        print('estados: ', estados)
         for e in estados:
             estados_novos.append(e)
         
