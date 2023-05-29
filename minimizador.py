@@ -3,6 +3,11 @@ from copy import copy
 
 class MinimizadorAFD:
 
+    tabela_transicoes_nova = []
+    estados_novos = []
+    inicial_novo = None
+    finais_novos = []
+
     @staticmethod
     def minimizar(afd):
         ### Implementando o metodo de Myhill Nerode
@@ -28,10 +33,10 @@ class MinimizadorAFD:
                 if estados_nao_finais[i] != afd.finais[j]:
                     pares_marcados.append([estados_nao_finais[i], afd.finais[j]])
                     
-        print("Pares nao marcados (possiveis equivalentes):")
-        print(pares_nao_marcados)
-        print("Pares marcados (nao equivalentes):")
-        print(pares_marcados)
+        # print("Pares nao marcados (possiveis equivalentes):")
+        # print(pares_nao_marcados)
+        # print("Pares marcados (nao equivalentes):")
+        # print(pares_marcados)
 
         ## 5.Verificar as transicoe dos pares de estados nao marcados, ate que nao seja possivel marcar mais nenhum par
         alterou = True
@@ -71,14 +76,14 @@ class MinimizadorAFD:
                 par_resultante_inverso.append(estado_resultado_qi)
 
                 if par_resultante in pares_marcados: ## 6.Caso o resultado do par esteja marcado, mudadmos o par para pares_marcados
-                    print('Par resultante: ' + par_resultante[0] + par_resultante[1] + ' esta marcado')
-                    print(par)
+                    # print('Par resultante: ' + par_resultante[0] + par_resultante[1] + ' esta marcado')
+                    # print(par)
                     pares_nao_marcados.remove(par)
                     pares_marcados.append(par)
                     count = 0
                 elif par_resultante_inverso in pares_marcados:
-                    print('Par resultante: ' + par_resultante_inverso[0] + par_resultante_inverso[1] + ' esta marcado')
-                    print(par)
+                    # print('Par resultante: ' + par_resultante_inverso[0] + par_resultante_inverso[1] + ' esta marcado')
+                    # print(par)
                     pares_nao_marcados.remove(par)
                     pares_marcados.append(par)
                     count = 0
@@ -90,17 +95,17 @@ class MinimizadorAFD:
 
             break
 
-        print("Pares nao marcados (possiveis equivalentes):")
-        print(pares_nao_marcados)
-        print("Pares marcados (nao equivalentes):")
-        print(pares_marcados)
+        # print("Pares nao marcados (possiveis equivalentes):")
+        # print(pares_nao_marcados)
+        # print("Pares marcados (nao equivalentes):")
+        # print(pares_marcados)
 
         MinimizadorAFD.juntar_estados(pares_nao_marcados, afd)
+
     
     @staticmethod
     def juntar_estados(pares_nao_marcados, afd):
         i = 0 
-        estados_novos = []
         while i < len(pares_nao_marcados):
             par = pares_nao_marcados[i]
             estado_novo = par[0] + par[1]
@@ -117,19 +122,19 @@ class MinimizadorAFD:
                     j+=1
                 # pares_nao_marcados.remove(par)
                 i += 1
-                estados_novos.append(estado_novo)
+                MinimizadorAFD.estados_novos.append(estado_novo)
             else:
                 break
             
         ## Reorganizar a lista de estados do afd
-        print("Estados novos antes: ")
-        print(estados_novos)
+        # print("Estados novos antes: ")
+        # print(MinimizadorAFD.estados_novos)
         i = 0
         estados = copy(afd.estados)
         while i < len(estados):
             remove = False
             e = estados[i]
-            for estado in estados_novos:
+            for estado in MinimizadorAFD.estados_novos:
                 if e in estado:
                     remove = True
             if remove:
@@ -138,54 +143,50 @@ class MinimizadorAFD:
             else:
                 i += 1
                     
-        print('estados: ', estados)
+        # print('estados: ', estados)
         for e in estados:
-            estados_novos.append(e)
+            MinimizadorAFD.estados_novos.append(e)
         
-        print("Estados novos: ")
-        print(estados_novos)
+        # print("Estados novos: ")
+        # print(MinimizadorAFD.estados_novos)
 
         ## verificar quem eh final
         finais = afd.finais
-        finais_novos = []
         i=0
         while i < len(finais):
             ef = finais[i]
-            for estado in estados_novos:
+            for estado in MinimizadorAFD.estados_novos:
                 if ef in estado:
-                    finais_novos.append(estado)
+                    MinimizadorAFD.finais_novos.append(estado)
                     i+=1
                 else:
                     i +=1
-        print("Finais novos: ")
-        print(finais_novos)
+        # print("Finais novos: ")
+        # print(MinimizadorAFD.finais_novos)
 
         ## verificar quem eh inicial
         inicial = afd.estado_inicial
-        inicial_novo = None
-
-        for estado in estados_novos:
+        for estado in MinimizadorAFD.estados_novos:
             if inicial in estado:
-                inicial_novo = estado
+                MinimizadorAFD.inicial_novo = estado
                 
-        print("Inicial novo:")
-        print(inicial_novo)
+        # print("Inicial novo:")
+        # print(inicial_novo)
 
         ## colocar transicoes
-        linha = len(estados_novos)
+        linha = len(MinimizadorAFD.estados_novos)
         coluna = len(afd.alfabeto)
     
         ## Criando a tabela de transicao para os novos estados
-        tabela_transicoes_nova = []
-        tabela_transicoes_nova = [[None for _ in range(coluna +1)] for _ in range(linha +1)]
+        MinimizadorAFD.tabela_transicoes_nova = [[None for _ in range(coluna +1)] for _ in range(linha +1)]
         
         for j in range(linha):
-            tabela_transicoes_nova[j+1][0] = estados_novos[j]
+            MinimizadorAFD.tabela_transicoes_nova[j+1][0] = MinimizadorAFD.estados_novos[j]
             
         for j in range(coluna):
-            tabela_transicoes_nova[0][j+1] = afd.alfabeto[j]
+            MinimizadorAFD.tabela_transicoes_nova[0][j+1] = afd.alfabeto[j]
         
-        print(tabela_transicoes_nova)
+        # print(MinimizadorAFD.tabela_transicoes_nova)
 
         ## Pegando as transicoes dos estados antigos para os estados novos
         ## se estado_novo[0] == linha na tabela antiga,
@@ -195,34 +196,30 @@ class MinimizadorAFD:
         k = 0
         simbolos = []
         linha = len(afd.estados)
-        copia_estados_novos = copy(estados_novos)
+        copia_estados_novos = copy(MinimizadorAFD.estados_novos)
         while k < len(copia_estados_novos):
             estado = copia_estados_novos[k]
             for i in range(linha):
                 if afd.transicoes_tabela[i+1][0] in estado:
-                    print('estado tabela: ', afd.transicoes_tabela[i+1][0], ' estado novo: ', estado)
+                    # print('estado tabela: ', afd.transicoes_tabela[i+1][0], ' estado novo: ', estado)
                     for j in range(len(afd.alfabeto)):
                         simbolos.append(afd.transicoes_tabela[i+1][j+1])
                     copia_estados_novos.remove(estado)
                     break
-        print('Simbolos: ', simbolos)
+        # print('Simbolos: ', simbolos)
 
         # Percoreendo a nova tabela de transicoes
-        linha = len(estados_novos)
+        linha = len(MinimizadorAFD.estados_novos)
         cont = 0
         for i in range(linha):
             for j in range(coluna):
                 s = simbolos[cont]
-                print(s)
+                # print(s)
                 # Verifica qual o estado resultante equivalente a esta transicao
-                for estado in estados_novos:
+                for estado in MinimizadorAFD.estados_novos:
                     if s in estado:
                         s = estado
-                        tabela_transicoes_nova[i+1][j+1] = s
+                        MinimizadorAFD.tabela_transicoes_nova[i+1][j+1] = s
                 cont += 1
 
-        print(tabela_transicoes_nova)
-
-                
-
-            
+        # print(MinimizadorAFD.tabela_transicoes_nova)

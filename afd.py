@@ -1,3 +1,6 @@
+from automata.fa.dfa import DFA
+from visual_automata.fa.dfa import VisualDFA
+
 class AFD:
 
     def __init__(self, arquivo) -> None: # Cria AFD a partir de um arquivo
@@ -82,3 +85,31 @@ class AFD:
             return True
         else:
             return False
+        
+    def afd_para_visual_dfa(self, estados_novos, inicial_novo, finais_novos, tabela_transicoes_nova):
+        
+        def matriz_para_dicionario(matriz):
+            dicionario = {}
+
+            for linha in matriz[1:]:
+                chave = linha[0]
+                valores = {}
+
+                for i, valor in enumerate(linha[1:]):
+                    simbolo = matriz[0][i+1]
+                    valores[simbolo] = valor
+
+                dicionario[chave] = valores
+
+            return dicionario
+        matriz = tabela_transicoes_nova
+
+        dicionario = matriz_para_dicionario(matriz)
+        dfa = VisualDFA(
+            states = set(estados_novos),
+            input_symbols = set(self.alfabeto),
+            transitions = dicionario,
+            initial_state = (inicial_novo),
+            final_states = set(finais_novos),
+        )
+        return dfa 
