@@ -1,4 +1,5 @@
 from afd import AFD
+from copy import copy
 
 class MinimizadorAFD:
 
@@ -124,7 +125,7 @@ class MinimizadorAFD:
         print("Estados novos antes: ")
         print(estados_novos)
         i = 0
-        estados = afd.estados
+        estados = copy(afd.estados)
         while i < len(estados):
             remove = False
             e = estados[i]
@@ -183,24 +184,45 @@ class MinimizadorAFD:
             
         for j in range(coluna):
             tabela_transicoes_nova[0][j+1] = afd.alfabeto[j]
+        
+        print(tabela_transicoes_nova)
 
         ## Pegando as transicoes dos estados antigos para os estados novos
         ## se estado_novo[0] == linha na tabela antiga,
         ## copia a transicao j
         ## for resultado_da_transicao == estado_novo[x] -> transicao na tabela nova recebe estado_novo[x]
+        
+        k = 0
+        simbolos = []
+        linha = len(afd.estados)
+        copia_estados_novos = copy(estados_novos)
+        while k < len(copia_estados_novos):
+            estado = copia_estados_novos[k]
+            for i in range(linha):
+                if afd.transicoes_tabela[i+1][0] in estado:
+                    print('estado tabela: ', afd.transicoes_tabela[i+1][0], ' estado novo: ', estado)
+                    for j in range(len(afd.alfabeto)):
+                        simbolos.append(afd.transicoes_tabela[i+1][j+1])
+                    copia_estados_novos.remove(estado)
+                    break
+        print('Simbolos: ', simbolos)
 
-        # for
-        # for estado in estados_novos:
-        #     for i in range(linha):
-        #         if afd.transicoes_tabela[i+1][0] == estado:
-        #             for j in range(coluna):
-        #                 if afd.transicoes_tabela[0][j+1] == s:
-        #                     if afd.transicoes_tabela[i+1][j+1] != None: # Tem mais de uma transicao com o mesmo simbolo saindo do estado
-        #                         print(afd.transicoes_tabela[i+1][j+1]);
-        #                         print('Tem mais de uma transicao com o mesmo simbolo saindo do estado.')
-        #                         return False
-        #                     elif afd.transicoes_tabela[0][j+1] == s:
-        #                         afd.transicoes_tabela[i+1][j+1] = qf
-        #                     break
-        #             break
+        # Percoreendo a nova tabela de transicoes
+        linha = len(estados_novos)
+        cont = 0
+        for i in range(linha):
+            for j in range(coluna):
+                s = simbolos[cont]
+                print(s)
+                # Verifica qual o estado resultante equivalente a esta transicao
+                for estado in estados_novos:
+                    if s in estado:
+                        s = estado
+                        tabela_transicoes_nova[i+1][j+1] = s
+                cont += 1
+
+        print(tabela_transicoes_nova)
+
+                
+
             
