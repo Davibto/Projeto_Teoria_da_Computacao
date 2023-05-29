@@ -7,7 +7,7 @@ class AFD:
         self.transicoes = [] # σ
         self.estado_inicial = None  # q0
         self.finais = [] # F
-        self.transicoes_tabela = [len(self.estados)][len(self.estados)] #σ
+        self.transicoes_tabela = [] #σ
 
         # Convertendo o arquivo .txt em afd 
         with open(arquivo, 'r') as arquivo:

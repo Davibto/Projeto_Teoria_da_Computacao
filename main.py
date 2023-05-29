@@ -18,21 +18,3 @@ if afd_valido == False:
 else:
     ### Minimizando o AFD utilizando o algoritmo de Myhill Nerode
     MinimizadorAFD().minimizar(afd)
-
-    ### Desenhando o AFD minimizado utilizando pygame
-    pygame.init() ## 1.Iniciando o pyagme
-    tela = pygame.display.set_mode((1080, 720)) ## 2.Criando a tela
-
-    # 3. Mudando o titulo e logo da tela
-    pygame.display.set_caption('Minimizador de AFD')
-    # icone = pygame.image.load('') # 32x32 pixels
-    # pygame.display.set_icon(icone) 
-
-    executando = True
-
-    while executando: ## 3.Toda a parte grafica sera executada dentro deste loop do programa, isso inclui desenhos do AFD e captura de eventos
-        for evento in pygame.event.get():
-            if evento.type == pygame.QUIT: ## 4.Evento para fechar a tela
-                executando = False
-        tela.fill((255, 255, 255)) # Mudando a cor da tela (RGB) -> tela branca
-        pygame.display.update() # Atualizando a tela

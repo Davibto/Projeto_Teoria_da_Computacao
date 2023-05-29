@@ -98,54 +98,106 @@ class MinimizadorAFD:
     
     @staticmethod
     def juntar_estados(pares_nao_marcados, afd):
-        ### Combinar estados nao marcados apos a execucao do metodo minimizar
-        estados = []
-        for par in pares_nao_marcados: #Criando os estados novos
-            for i in range(len(par)):
-                for j in range(len(pares_nao_marcados)):
-                    if par[i] in pares_nao_marcados[j]:
-                        if par[i] != pares_nao_marcados[j][0]:
-                            estados.append(par[i] + pares_nao_marcados[j][0])
-                        else:
-                            estados.append(par[i] + pares_nao_marcados[j][1])
-                        print(estados)
-                        print(par[i], pares_nao_marcados[j])
+        i = 0 
+        estados_novos = []
+        while i < len(pares_nao_marcados):
+            par = pares_nao_marcados[i]
+            estado_novo = par[0] + par[1]
+            for estado in estados_novos:
+                if (estado_novo[0] in estado) or (estado_novo[1] in estado):
+                    pares_nao_marcados.remove(par)
+            j = i+1
+            while j < len(pares_nao_marcados):
+                if par[0] == pares_nao_marcados[j][0] or par[1] == pares_nao_marcados[j][0]:
+                    if not pares_nao_marcados[j][1] in estado_novo:
+                        estado_novo += pares_nao_marcados[j][1]
                         pares_nao_marcados.remove(pares_nao_marcados[j])
-                        break
-            #adiciona as transicoes
+                elif par[0] == pares_nao_marcados[j][1] or par[1] == pares_nao_marcados[j][1]:
+                    if not pares_nao_marcados[j][0] in estado_novo:
+                        estado_novo += pares_nao_marcados[j][0]
+                j+=1
+            pares_nao_marcados.remove(par)
+            estados_novos.append(estado_novo)
+            
+        ## Reorganizar a lista de estados do afd
+        print("Estados novos antes: ")
+        print(estados_novos)
+        i = 0
+        estados = afd.estados
+        while i < len(estados):
+            print(i)
+            e = estados[i]
+            for estado in estados_novos:
+                if e in estado:
+                    print(e)
+                    i = 0
+                    estados.remove(e)
+            i += 1
+                    
         
-        linha = len(afd.estados)
-        coluna = len(afd.alfabeto)
-        estado_resultado_qi = None
-        estado_resultado_qf = None
-        count = 0
+        for e in estados:
+            estados_novos.append(e)
+        
+        print("Estados novos: ")
+        print(estados_novos)
 
-        for s in afd.alfabeto: # Verificando os estados resultantes das transicoes
-            for i in range(linha): # Linha referente ao qi na tabela de transicoes
-                if afd.transicoes_tabela[i+1][0] == estados[i][0]:
-                    afd.transicoes_tabela[i+1][0] = estados[i][0]
-                    break
+        ## verificar quem eh final
+        finais = afd.finais
+        finais_novos = []
+        i=0
+        while i < len(finais):
+            ef = finais[i]
+            for estado in estados_novos:
+                if ef in estado:
+                    finais_novos.append(estado)
+                    i+=1
+                else:
+                    i +=1
+        print("Finais novos: ")
+        print(finais_novos)
 
-        while (count < len(afd.estados)):
-            for estado in estados:
-                if afd.estados[count] == estado[0]:
-                    print('entrou 1')
-                    afd.estados.append(estado)
-                    afd.estados.remove(estado[0])
-                    count = 0
+        ## verificar quem eh inicial
+        inicial = afd.estado_inicial
+        inicial_novo = None
+
+        for estado in estados_novos:
+            if inicial in estado:
+                inicial_novo = estado
                 
-                elif afd.estados[count] == estado[1]:
-                    print('entrou 2')
-                    afd.estados.append(estado)
-                    afd.estados.remove(estado[1])
-                    count = 0
-                else: 
-                    count+=1
+        print("Inicial novo:")
+        print(inicial_novo)
 
-        print(afd.estados)
-            #apaga os estados [a, b] ...
-            #adiciona os estados criados
-            #minimizar(afd)
-            #['cd', 'ce'],  ['d', 'e']
-            #['cdc', 'de']
-            #cdcde
+        ## colocar transicoes
+        linha = len(estados_novos)
+        coluna = len(afd.alfabeto)
+    
+        ## Criando a tabela de transicao para os novos estados
+        tabela_transicoes_nova = []
+        tabela_transicoes_nova = [[None for _ in range(coluna +1)] for _ in range(linha +1)]
+        
+        for j in range(linha):
+            tabela_transicoes_nova[j+1][0] = estados_novos[j]
+            
+        for j in range(coluna):
+            tabela_transicoes_nova[0][j+1] = afd.alfabeto[j]
+
+        ## Pegando as transicoes dos estados antigos para os estados novos
+        ## se estado_novo[0] == linha na tabela antiga,
+        ## copia a transicao j
+        ## for resultado_da_transicao == estado_novo[x] -> transicao na tabela nova recebe estado_novo[x]
+
+        # for
+        # for estado in estados_novos:
+        #     for i in range(linha):
+        #         if afd.transicoes_tabela[i+1][0] == estado:
+        #             for j in range(coluna):
+        #                 if afd.transicoes_tabela[0][j+1] == s:
+        #                     if afd.transicoes_tabela[i+1][j+1] != None: # Tem mais de uma transicao com o mesmo simbolo saindo do estado
+        #                         print(afd.transicoes_tabela[i+1][j+1]);
+        #                         print('Tem mais de uma transicao com o mesmo simbolo saindo do estado.')
+        #                         return False
+        #                     elif afd.transicoes_tabela[0][j+1] == s:
+        #                         afd.transicoes_tabela[i+1][j+1] = qf
+        #                     break
+        #             break
+            
