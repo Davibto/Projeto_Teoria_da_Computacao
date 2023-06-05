@@ -14,7 +14,8 @@ class MinimizadorAFD:
         ## 1. Recuperando os pares de todos os estados pertencentes ao AFD
         conjunto_estados = afd.estados
         conjunto_estados_finais = afd.finais
-        estados_nao_finais = [estado for estado in conjunto_estados if estado not in conjunto_estados_finais] # Estados nao finais eh a diferenca entre os estados e os estados finais
+        # Estados nao finais eh a diferenca entre os estados e os estados finais
+        estados_nao_finais = [estado for estado in conjunto_estados if estado not in conjunto_estados_finais]
         pares_marcados = []
         pares_nao_marcados = []
 
@@ -32,13 +33,13 @@ class MinimizadorAFD:
             for j in range(len(afd.finais)):
                 if estados_nao_finais[i] != afd.finais[j]:
                     pares_marcados.append([estados_nao_finais[i], afd.finais[j]])
-                    
-        # print("Pares nao marcados (possiveis equivalentes):")
-        # print(pares_nao_marcados)
-        # print("Pares marcados (nao equivalentes):")
-        # print(pares_marcados)
 
-        ## 5.Verificar as transicoe dos pares de estados nao marcados, ate que nao seja possivel marcar mais nenhum par
+        print("Pares nao marcados (possiveis equivalentes):")
+        print(pares_nao_marcados)
+        print("Pares marcados (nao equivalentes):")
+        print(pares_marcados)
+
+        ## 5.Verificar as transicoes dos pares de estados nao marcados, ate que nao seja possivel marcar mais nenhum par
         alterou = True
         while alterou: # Enquanto houver alteracoes em pares_nao_marcados e pares_marcados, verifica os estados de pares_nao_marcados
             count = 0
@@ -50,7 +51,6 @@ class MinimizadorAFD:
                 coluna = len(afd.alfabeto)
                 estado_resultado_qi = None
                 estado_resultado_qf = None
-                #print(qi, qf) ta pegando todos os estados
 
                 for s in afd.alfabeto: # Verificando os estados resultantes das transicoes
                     for i in range(linha): # Linha referente ao qi na tabela de transicoes
@@ -76,14 +76,14 @@ class MinimizadorAFD:
                 par_resultante_inverso.append(estado_resultado_qi)
 
                 if par_resultante in pares_marcados: ## 6.Caso o resultado do par esteja marcado, mudadmos o par para pares_marcados
-                    # print('Par resultante: ' + par_resultante[0] + par_resultante[1] + ' esta marcado')
-                    # print(par)
+                    print('Par resultante: ' + par_resultante[0] + par_resultante[1] + ' esta marcado')
+                    print(par)
                     pares_nao_marcados.remove(par)
                     pares_marcados.append(par)
                     count = 0
                 elif par_resultante_inverso in pares_marcados:
-                    # print('Par resultante: ' + par_resultante_inverso[0] + par_resultante_inverso[1] + ' esta marcado')
-                    # print(par)
+                    print('Par resultante: ' + par_resultante_inverso[0] + par_resultante_inverso[1] + ' esta marcado')
+                    print(par)
                     pares_nao_marcados.remove(par)
                     pares_marcados.append(par)
                     count = 0
@@ -91,47 +91,43 @@ class MinimizadorAFD:
                     count +=1
                     if count == len(pares_nao_marcados)-1: 
                         alterou = False
-            #while(i < len(pares_nao_marcados))                     
-
             break
 
-        # print("Pares nao marcados (possiveis equivalentes):")
-        # print(pares_nao_marcados)
-        # print("Pares marcados (nao equivalentes):")
-        # print(pares_marcados)
+        print("Pares nao marcados equivalentes:")
+        print(pares_nao_marcados)
+        print("Pares marcados nao equivalentes:")
+        print(pares_marcados)
 
         MinimizadorAFD.juntar_estados(pares_nao_marcados, afd)
 
-    
     @staticmethod
     def juntar_estados(pares_nao_marcados, afd):
         i = 0 
-        while i < len(pares_nao_marcados):
+        while i < len(pares_nao_marcados): ## Juntando os pares nao marcados
             par = pares_nao_marcados[i]
             estado_novo = par[0] + par[1]
             j = i
             if j < len(pares_nao_marcados[j]):
-                while j < len(pares_nao_marcados):
+                while j < len(pares_nao_marcados): ## Caso hajam pares nao marcados que possuem estados em comum, eles serao concatenados em um unico estado
                     if par[0] == pares_nao_marcados[j][0] or par[1] == pares_nao_marcados[j][0]:
                         if not pares_nao_marcados[j][1] in estado_novo:
                             estado_novo += pares_nao_marcados[j][1]
-                            # pares_nao_marcados.remove(pares_nao_marcados[j])
                     elif par[0] == pares_nao_marcados[j][1] or par[1] == pares_nao_marcados[j][1]:
                         if not pares_nao_marcados[j][0] in estado_novo:
                             estado_novo += pares_nao_marcados[j][0]
                     j+=1
-                # pares_nao_marcados.remove(par)
                 i += 1
                 MinimizadorAFD.estados_novos.append(estado_novo)
             else:
                 break
             
         ## Reorganizar a lista de estados do afd
-        # print("Estados novos antes: ")
-        # print(MinimizadorAFD.estados_novos)
+        print("Estados novos antes: ")
+        print(MinimizadorAFD.estados_novos)
+
         i = 0
         estados = copy(afd.estados)
-        while i < len(estados):
+        while i < len(estados): ## Remover os estados que foram juntados no passo anterior
             remove = False
             e = estados[i]
             for estado in MinimizadorAFD.estados_novos:
@@ -143,12 +139,11 @@ class MinimizadorAFD:
             else:
                 i += 1
                     
-        # print('estados: ', estados)
-        for e in estados:
+        for e in estados: ## Aicionar os estados minimizados
             MinimizadorAFD.estados_novos.append(e)
         
-        # print("Estados novos: ")
-        # print(MinimizadorAFD.estados_novos)
+        print("Estados novos: ")
+        print(MinimizadorAFD.estados_novos)
 
         ## verificar quem eh final
         finais = afd.finais
@@ -161,19 +156,19 @@ class MinimizadorAFD:
                     i+=1
                 else:
                     i +=1
-        # print("Finais novos: ")
-        # print(MinimizadorAFD.finais_novos)
+        print("Finais novos: ")
+        print(MinimizadorAFD.finais_novos)
 
-        ## verificar quem eh inicial
+        ## Verificar quem eh inicial
         inicial = afd.estado_inicial
         for estado in MinimizadorAFD.estados_novos:
             if inicial in estado:
                 MinimizadorAFD.inicial_novo = estado
                 
-        # print("Inicial novo:")
-        # print(inicial_novo)
+        print("Inicial novo:")
+        print(MinimizadorAFD.inicial_novo)
 
-        ## colocar transicoes
+        ## Colocar transicoes
         linha = len(MinimizadorAFD.estados_novos)
         coluna = len(afd.alfabeto)
     
@@ -186,7 +181,8 @@ class MinimizadorAFD:
         for j in range(coluna):
             MinimizadorAFD.tabela_transicoes_nova[0][j+1] = afd.alfabeto[j]
         
-        # print(MinimizadorAFD.tabela_transicoes_nova)
+        print('Tabela Transicoes:')
+        print(MinimizadorAFD.tabela_transicoes_nova)
 
         ## Pegando as transicoes dos estados antigos para os estados novos
         ## se estado_novo[0] == linha na tabela antiga,
@@ -222,4 +218,5 @@ class MinimizadorAFD:
                         MinimizadorAFD.tabela_transicoes_nova[i+1][j+1] = s
                 cont += 1
 
-        # print(MinimizadorAFD.tabela_transicoes_nova)
+        print('Tabela Transicoes final:')
+        print(MinimizadorAFD.tabela_transicoes_nova)
