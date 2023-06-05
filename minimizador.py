@@ -147,13 +147,17 @@ class MinimizadorAFD:
 
         ## verificar quem eh final
         finais = afd.finais
+        print("finais:")
+        print(finais)
         i=0
         while i < len(finais):
             ef = finais[i]
             for estado in MinimizadorAFD.estados_novos:
+                print('ef[', i, ']: ' + ef + 'estado: ' + estado)
                 if ef in estado:
                     MinimizadorAFD.finais_novos.append(estado)
                     i+=1
+                    break
                 else:
                     i +=1
         print("Finais novos: ")
