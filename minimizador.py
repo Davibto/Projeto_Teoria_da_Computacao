@@ -153,7 +153,6 @@ class MinimizadorAFD:
         while i < len(finais):
             ef = finais[i]
             for estado in MinimizadorAFD.estados_novos:
-                print('ef[', i, ']: ' + ef + 'estado: ' + estado)
                 if ef in estado:
                     MinimizadorAFD.finais_novos.append(estado)
                     i+=1
